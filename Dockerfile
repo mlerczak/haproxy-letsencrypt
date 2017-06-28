@@ -9,9 +9,10 @@ ENV OPENSSL_VERSION="1.1.0f"
 ENV CERTS_PATH /etc/haproxy/certs
 ENV HAPROXY_CONFIG /etc/haproxy/haproxy.cfg
 
-RUN yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional
-RUN yum update -y \
-    && yum install -y epel-release inotify-tools wget make gcc perl pcre-devel zlib-devel readline-devel certbot
+RUN yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-server-optional \
+    && yum install -y epel-release \
+    && yum update -y \
+    && yum install -y inotify-tools wget make gcc perl pcre-devel zlib-devel readline-devel certbot
 
 RUN cd /usr/src \
     && curl -R -O http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
@@ -28,7 +29,9 @@ RUN wget -O /tmp/openssl.tgz https://www.openssl.org/source/openssl-${OPENSSL_VE
                 --openssldir=/etc/ssl \
                 --libdir=lib \
                 no-shared zlib-dynamic \
-    && make && make install \
+    && make \
+    && make install_ssldirs \
+    && make install_sw \
     && cd \
     && rm -rf /tmp/openssl*
 
@@ -55,8 +58,8 @@ RUN openssl genrsa -out ${CERTS_PATH}/dummy.key 2048 \
 RUN cat ${CERTS_PATH}/dummy.crt ${CERTS_PATH}/dummy.key > ${CERTS_PATH}/haproxy-dummy.pem
 RUN rm ${CERTS_PATH}/dummy.*
 
-RUN yum remove -y make gcc pcre-devel readline-devel
-RUN yum clean all
+RUN yum remove -y wget gcc pcre-devel zlib-devel perl readline-devel \
+    && yum clean all
 
 COPY container-files /
 

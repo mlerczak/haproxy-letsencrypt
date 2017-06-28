@@ -1,14 +1,20 @@
-# HAProxy with certbot
+**Master**
+[![Build Status](https://travis-ci.org/mlerczak/haproxy-letsencrypt.svg?branch=master)](https://travis-ci.org/mlerczak/haproxy-letsencrypt)
+
+**Dev**
+[![Dev Build Status](https://travis-ci.org/mlerczak/haproxy-letsencrypt.svg?branch=dev)](https://travis-ci.org/mlerczak/haproxy-letsencrypt)
+
+
 
 HAProxy docker container based on [million12/haproxy](https://registry.hub.docker.com/u/million12/haproxy/) and [bradjonesllc/docker-haproxy-letsencrypt](https://hub.docker.com/r/bradjonesllc/docker-haproxy-letsencrypt/) 
 
-Software:
+**Software:**
 
 `HAProxy 1.7.7`
 `OpenSSL 1.1.0f`
 
+**Docker compose example:**
 
-Docker compose example:
 ```bash
 version: "2"
 services:
@@ -20,11 +26,12 @@ services:
       - 80:80
       - 443:443
     environment:
+      - GENERATE_SSL=1
       - CERTS=5ki.pl,www.5ki.pl
       - EMAIL=mateusz.lerczak@5ki.pl
 ```
 
-Docker Swarm example
+**Docker Swarm example**
 ```bash
 version: "3"
 services:
@@ -36,6 +43,7 @@ services:
       - 80:80
       - 443:443
     environment:
+      - GENERATE_SSL=1
       - CERTS=5ki.pl,www.5ki.pl
       - EMAIL=mateusz.lerczak@5ki.pl
     deploy:
@@ -44,6 +52,43 @@ networks:
     default:
         external:
             name: SWARM_network
+```
+**SSL Generation**
+To generate SSL go into container and run `generateCertsForHAProxy`
+
+```bash
+docker exec -it HAPROXY_app.i69nbm4r9yn7mjd391s7tnizs.i81ux4tx4spm97ajx845vwvsb bash
+
+[root@5b5ba38dcd70 ~]# generateCertsForHAProxy 
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Starting new HTTPS connection (1): acme-v01.api.letsencrypt.org
+Obtaining a new certificate
+Performing the following challenges:
+http-01 challenge for 5ki.pl
+http-01 challenge for www.5ki.pl
+Using the webroot path /var/lib/haproxy for all unmatched domains.
+Waiting for verification...
+Cleaning up challenges
+Unable to clean up challenge directory /var/lib/haproxy/.well-known/acme-challenge
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/m2.b-testing.dk/fullchain.pem. Your cert will
+   expire on 2017-09-26. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run "certbot
+   renew"
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+
+[root@5b5ba38dcd70 ~]#
 ```
 
 HAProxy cfg example
@@ -108,8 +153,8 @@ frontend https-in
     http-request set-header X-Forwarded-Proto https if  { ssl_fc }
     http-request set-header X-Forwarded-Proto http  if !{ ssl_fc }
 
-    acl is_www hdr(host) -i www.5ki.pl
-    use_backend www if is_www
+#    acl is_www hdr(host) -i www.5ki.pl
+#    use_backend www if is_www
 
 frontend https-http2-in
     mode tcp
