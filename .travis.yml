@@ -22,7 +22,7 @@ script:
   - sleep 5
 
   # Test if HAProxy uses the provided alternative config
-  - grep "HAProxy started with /my-haproxy.cfg config" /tmp/docker-haproxy.log
+  - grep "HAProxy started with /custom-haproxy.cfg config" /tmp/docker-haproxy.log
 
   # Make a change and check if HAProxy restarts
   - echo "" >> container-files/etc/haproxy/haproxy.cfg && sleep 1 
