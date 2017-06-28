@@ -51,6 +51,11 @@ function logger_info {
 ## main routine ##
 ##################
 
+if [ -z "${GENERATE_SSL}" ] || [ 1 != "${GENERATE_SSL}" ]; then
+    echo "If you want to generate SSL certs you need to set env GENERATE_SSL=1"
+    exit 1;
+fi
+
 le_cert_root="/etc/letsencrypt/live"
 
 if [ ! -d ${le_cert_root} ]; then

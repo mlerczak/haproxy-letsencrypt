@@ -11,17 +11,6 @@ HAPROXY_PID_FILE="/var/run/haproxy.pid"
 HAPROXY_CMD="/usr/local/sbin/haproxy -f ${HAPROXY_CONFIG} ${HAPROXY_USER_PARAMS} -D -p ${HAPROXY_PID_FILE}"
 HAPROXY_CHECK_CONFIG_CMD="/usr/local/sbin/haproxy -f ${HAPROXY_CONFIG} -c"
 
-if [ -n "$CERTS" ]; then
-    certbot certonly --no-self-upgrade -n --text --standalone \
-        --preferred-challenges http-01 \
-        -d "$CERTS" --keep --expand --agree-tos --email "$EMAIL"
-
-    for site in `ls -1 /etc/letsencrypt/live`; do
-        cat /etc/letsencrypt/live/$site/privkey.pem \
-          /etc/letsencrypt/live/$site/fullchain.pem \
-          | tee /etc/haproxy/certs/haproxy-"$site".pem >/dev/null
-    done
-fi
 
 #######################################
 # Echo/log function
