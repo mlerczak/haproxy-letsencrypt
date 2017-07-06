@@ -1,20 +1,36 @@
 #!/bin/bash
 
-if [ -n "${GENERATE_SSL}" ] && [ 1 == "${GENERATE_SSL}" ]; then
-    if [ -n "${CERTS}" ]; then
+if [ -n "${CERTS}" ]; then
+	clear
+
+	echo "To generate SSL your domains must be accessible public to pass acme-challenge, if domains are only accessible from local use DNS validation method."
+	echo "Available method:"
+	echo " - auto (domain is public, default method)"
+	echo " - dns  (domain is local, you have to add TXT record to DNS)"
+	echo ""
+	read -r -p "Choose method [auto]:" generateMethod
+
+	generateMethod=${generateMethod:-"auto"}
+
+	case "${generateMethod}" in
+	'auto')
         certbot certonly --no-self-upgrade -n --text --webroot -w /var/lib/haproxy \
             --preferred-challenges http-01 \
             -d "${CERTS}" --keep --expand --agree-tos --email "${EMAIL}" \
             || exit 1
+        ;;
+	'dns')
+		certbot certonly --no-self-upgrade --text --agree-tos --manual --preferred-challenges dns -d "${CERTS}" --email "${EMAIL}" || exit 1
+        ;;
+	*)
+		echo "Wrong option"
+		exit 1
+        ;;
+	esac
 
-        mkdir -p /etc/haproxy/certs
-        for site in `ls -1 /etc/letsencrypt/live`; do
-            cat /etc/letsencrypt/live/$site/privkey.pem \
-              /etc/letsencrypt/live/$site/fullchain.pem \
-              | tee /etc/haproxy/certs/haproxy-"$site".pem >/dev/null
-        done
-    fi
-else
-    echo "If you want to generate SSL certs you need to set env GENERATE_SSL=1"
+    for site in `ls -1 /etc/letsencrypt/live`; do
+        cat /etc/letsencrypt/live/$site/privkey.pem \
+          /etc/letsencrypt/live/$site/fullchain.pem \
+          | tee /etc/haproxy/certs/haproxy-"$site".pem >/dev/null
+    done
 fi
-
