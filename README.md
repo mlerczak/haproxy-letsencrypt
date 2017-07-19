@@ -10,7 +10,7 @@ HAProxy docker container based on [million12/haproxy](https://registry.hub.docke
 
 **Software:**
 
-`HAProxy 1.7.7`
+`HAProxy 1.7.8`
 `OpenSSL 1.1.0f`
 
 **Docker compose example:**
@@ -26,7 +26,6 @@ services:
       - 80:80
       - 443:443
     environment:
-      - GENERATE_SSL=1
       - CERTS=5ki.pl,www.5ki.pl
       - EMAIL=mateusz.lerczak@5ki.pl
 ```
@@ -43,7 +42,6 @@ services:
       - 80:80
       - 443:443
     environment:
-      - GENERATE_SSL=1
       - CERTS=5ki.pl,www.5ki.pl
       - EMAIL=mateusz.lerczak@5ki.pl
     deploy:
@@ -91,7 +89,7 @@ IMPORTANT NOTES:
 [root@5b5ba38dcd70 ~]#
 ```
 
-HAProxy cfg example
+**HAProxy cfg example**
 
 ```bash
 global
