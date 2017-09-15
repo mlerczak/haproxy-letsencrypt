@@ -10,7 +10,7 @@ HAProxy docker container based on [million12/haproxy](https://registry.hub.docke
 
 **Software:**
 
-`HAProxy 1.7.8`
+`HAProxy 1.7.9`
 `OpenSSL 1.1.0f`
 
 **Docker compose example:**
@@ -71,7 +71,7 @@ Unable to clean up challenge directory /var/lib/haproxy/.well-known/acme-challen
 
 IMPORTANT NOTES:
  - Congratulations! Your certificate and chain have been saved at
-   /etc/letsencrypt/live/m2.b-testing.dk/fullchain.pem. Your cert will
+   /etc/letsencrypt/live/5ki.pl/fullchain.pem. Your cert will
    expire on 2017-09-26. To obtain a new or tweaked version of this
    certificate in the future, simply run certbot again. To
    non-interactively renew *all* of your certificates, run "certbot
