@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -n "${WILDCARD_DOMAIN}" ]; then
+    certbot certonly --server https://acme-v02.api.letsencrypt.org/directory --no-self-upgrade --text --agree-tos --manual --preferred-challenges dns -d "*.${WILDCARD_DOMAIN}" --email "${EMAIL}" || exit 1
+
+    cat /etc/letsencrypt/live/${WILDCARD_DOMAIN}/privkey.pem \
+      /etc/letsencrypt/live/${WILDCARD_DOMAIN}/fullchain.pem \
+      | tee /etc/haproxy/certs/wildcard.${WILDCARD_DOMAIN}.pem >/dev/null
+fi

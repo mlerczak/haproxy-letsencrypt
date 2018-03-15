@@ -14,13 +14,13 @@ if [ -n "${CERTS}" ]; then
 
 	case "${generateMethod}" in
 	'auto')
-        certbot certonly --no-self-upgrade -n --text --webroot -w /var/lib/haproxy \
+        certbot certonly --server https://acme-v02.api.letsencrypt.org/directory --no-self-upgrade -n --text --webroot -w /var/lib/haproxy \
             --preferred-challenges http-01 \
             -d "${CERTS}" --keep --expand --agree-tos --email "${EMAIL}" \
             || exit 1
         ;;
 	'dns')
-		certbot certonly --no-self-upgrade --text --agree-tos --manual --preferred-challenges dns -d "${CERTS}" --email "${EMAIL}" || exit 1
+		certbot certonly --server https://acme-v02.api.letsencrypt.org/directory --no-self-upgrade --text --agree-tos --manual --preferred-challenges dns -d "${CERTS}" --email "${EMAIL}" || exit 1
         ;;
 	*)
 		echo "Wrong option"
@@ -31,6 +31,6 @@ if [ -n "${CERTS}" ]; then
     for site in `ls -1 /etc/letsencrypt/live`; do
         cat /etc/letsencrypt/live/$site/privkey.pem \
           /etc/letsencrypt/live/$site/fullchain.pem \
-          | tee /etc/haproxy/certs/haproxy-"$site".pem >/dev/null
+          | tee /etc/haproxy/certs/"$site".pem >/dev/null
     done
 fi

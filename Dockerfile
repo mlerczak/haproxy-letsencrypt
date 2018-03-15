@@ -1,11 +1,11 @@
 FROM centos:centos7
 MAINTAINER Mateusz Lerczak mateusz.lerczak@5ki.pl
 
-ENV HAPROXY_MJR_VERSION=1.7
-ENV HAPROXY_VERSION=1.7.9
+ENV HAPROXY_MJR_VERSION=1.8
+ENV HAPROXY_VERSION=1.8.4
 ENV LUA_VERSION 5.3.4
 ENV LUA_MJR_VERSION 53
-ENV OPENSSL_VERSION="1.1.0f"
+ENV OPENSSL_VERSION="1.1.0g"
 ENV CERTS_PATH /etc/haproxy/certs
 ENV HAPROXY_CONFIG /etc/haproxy/haproxy.cfg
 
@@ -15,7 +15,7 @@ RUN yum-config-manager --enable rhui-REGION-rhel-server-extras rhui-REGION-rhel-
     && yum install -y inotify-tools wget make gcc perl pcre-devel zlib-devel readline-devel certbot
 
 RUN cd /usr/src \
-    && curl -R -O http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
+    && curl -R -O https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
     && tar -zxf lua-${LUA_VERSION}.tar.gz \
     && rm lua-${LUA_VERSION}.tar.gz \
     && cd lua-${LUA_VERSION} \

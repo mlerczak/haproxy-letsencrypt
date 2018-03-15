@@ -10,8 +10,8 @@ HAProxy docker container based on [million12/haproxy](https://registry.hub.docke
 
 **Software:**
 
-`HAProxy 1.7.9`
-`OpenSSL 1.1.0f`
+`HAProxy 1.8.4`
+`OpenSSL 1.1.0g`
 
 **Docker compose example:**
 
@@ -26,7 +26,7 @@ services:
       - 80:80
       - 443:443
     environment:
-      - CERTS=5ki.pl,www.5ki.pl
+      - CERTS=5ki.pl
       - EMAIL=mateusz.lerczak@5ki.pl
 ```
 
@@ -42,7 +42,7 @@ services:
       - 80:80
       - 443:443
     environment:
-      - CERTS=5ki.pl,www.5ki.pl
+      - CERTS=5ki.pl
       - EMAIL=mateusz.lerczak@5ki.pl
     deploy:
       mode: global
@@ -63,7 +63,6 @@ Starting new HTTPS connection (1): acme-v01.api.letsencrypt.org
 Obtaining a new certificate
 Performing the following challenges:
 http-01 challenge for 5ki.pl
-http-01 challenge for www.5ki.pl
 Using the webroot path /var/lib/haproxy for all unmatched domains.
 Waiting for verification...
 Cleaning up challenges
